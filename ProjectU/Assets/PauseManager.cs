@@ -18,8 +18,12 @@ public class PauseManager : MonoBehaviour {
 	{
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
+#if UNITY_EDITOR
 			canvas.enabled = !canvas.enabled;
 			Pause();
+#else
+            Quit();
+#endif
 		}
 	}
 
