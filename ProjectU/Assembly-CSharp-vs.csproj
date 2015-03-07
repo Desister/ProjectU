@@ -63,6 +63,11 @@
      <Compile Include="Assets\Scripts\Player\PlayerHealth.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerMovement.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerShooting.cs" />
+     <Compile Include="Assets\Scripts\Voxel\Chunk.cs" />
+     <Compile Include="Assets\Scripts\Voxel\Cube.cs" />
+     <Compile Include="Assets\Scripts\Voxel\ModifyTerrain.cs" />
+     <Compile Include="Assets\Scripts\Voxel\Noise.cs" />
+     <Compile Include="Assets\Scripts\Voxel\WorldGen.cs" />
      <None Include="Assets\Shaders\Rim Lit Bumped Specular.shader" />
      <None Include="Assets\Fonts\LuckiestGuy\LICENSE.txt" />
  <Reference Include="UnityEngine.UI">

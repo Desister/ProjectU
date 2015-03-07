@@ -19,22 +19,22 @@ public class ModifyTerrain : MonoBehaviour
     {
         for (int x = 0; x < world.chunks.GetLength(0); x++)
         {
-            for (int z = 0; z < world.chunks.GetLength(2); z++)
+            for (int z = 0; z < world.chunks.GetLength(1); z++)
             {
 
-                float dist = Vector2.Distance(new Vector2(x * world.chunkSize,
-                z * world.chunkSize), new Vector2(playerPos.x, playerPos.z));
+                float dist = Vector2.Distance(new Vector2(x * world.chunkSizeX,
+                z * world.chunkSizeZ), new Vector2(playerPos.x, playerPos.z));
 
                 if (dist < distToLoad)
                 {
-                    if (world.chunks[x, 0, z] == null)
+                    if (world.chunks[x, z] == null)
                     {
                         world.GenColumn(x, z);
                     }
                 }
                 else if (dist > distToUnload)
                 {
-                    if (world.chunks[x, 0, z] != null)
+                    if (world.chunks[x, z] != null)
                     {
                         world.UnloadColumn(x, z);
                     }
@@ -152,47 +152,46 @@ public class ModifyTerrain : MonoBehaviour
     {
         //Updates the chunk containing this block
 
-        int updateX = Mathf.FloorToInt(x / world.chunkSize);
-        int updateY = Mathf.FloorToInt(y / world.chunkSize);
-        int updateZ = Mathf.FloorToInt(z / world.chunkSize);
+        int updateX = Mathf.FloorToInt(x / world.chunkSizeX);
+        int updateZ = Mathf.FloorToInt(z / world.chunkSizeZ);
 
         print("Updating: \" + updateX + \", \" + updateY + \", \" + updateZ");
 
-        EnsureChunkUpdates(x, y, z, updateX, updateY, updateZ);
+        EnsureChunkUpdates(x, y, z, updateX, updateZ);
     }
 
-    private void EnsureChunkUpdates(int x, int y, int z, int updateX, int updateY, int updateZ)
+    private void EnsureChunkUpdates(int x, int y, int z, int updateX, int updateZ)
     {
-        world.chunks[updateX, updateY, updateZ].updateNeeded = true;
+        world.chunks[updateX, updateZ].updateNeeded = true;
 
-        if (x - (world.chunkSize * updateX) == 0 && updateX != 0)
+        if (x - (world.chunkSizeX * updateX) == 0 && updateX != 0)
         {
-            world.chunks[updateX - 1, updateY, updateZ].updateNeeded = true;
+            world.chunks[updateX - 1, updateZ].updateNeeded = true;
         }
 
-        if (x - (world.chunkSize * updateX) == 15 && updateX != world.chunks.GetLength(0) - 1)
+        if (x - (world.chunkSizeX * updateX) == 15 && updateX != world.chunks.GetLength(0) - 1)
         {
-            world.chunks[updateX + 1, updateY, updateZ].updateNeeded = true;
+            world.chunks[updateX + 1, updateZ].updateNeeded = true;
         }
 
-        if (y - (world.chunkSize * updateY) == 0 && updateY != 0)
+        //if (y - (world.chunkSizeY * updateY) == 0 && updateY != 0)
+        //{
+        //    world.chunks[updateX - 1, updateZ].updateNeeded = true;
+        //}
+
+        //if (y - (world.chunkSizeY * updateY) == 15 && updateY != world.chunks.GetLength(1) - 1)
+        //{
+        //    world.chunks[updateX, updateY + 1, updateZ].updateNeeded = true;
+        //}
+
+        if (z - (world.chunkSizeZ * updateZ) == 0 && updateZ != 0)
         {
-            world.chunks[updateX, updateY - 1, updateZ].updateNeeded = true;
+            world.chunks[updateX, updateZ - 1].updateNeeded = true;
         }
 
-        if (y - (world.chunkSize * updateY) == 15 && updateY != world.chunks.GetLength(1) - 1)
+        if (z - (world.chunkSizeZ * updateZ) == 15 && updateZ != world.chunks.GetLength(1) - 1)
         {
-            world.chunks[updateX, updateY + 1, updateZ].updateNeeded = true;
-        }
-
-        if (z - (world.chunkSize * updateZ) == 0 && updateZ != 0)
-        {
-            world.chunks[updateX, updateY, updateZ - 1].updateNeeded = true;
-        }
-
-        if (z - (world.chunkSize * updateZ) == 15 && updateZ != world.chunks.GetLength(2) - 1)
-        {
-            world.chunks[updateX, updateY, updateZ + 1].updateNeeded = true;
+            world.chunks[updateX, updateZ + 1].updateNeeded = true;
         }
     }
 

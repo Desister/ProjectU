@@ -4,12 +4,14 @@ using System.Collections;
 public class WorldGen : MonoBehaviour
 {
     public GameObject chunk;
-    public Chunk[, ,] chunks;
-    public int chunkSize = 16;
+    public Chunk[,] chunks;
+    public int chunkSizeX = 16;
+    public int chunkSizeY = 16;
+    public int chunkSizeZ = 16;
 
-    private int worldX = 32;
+    private int worldX = 64;
     private int worldY = 16;
-    private int worldZ = 32;
+    private int worldZ = 64;
 
     public byte[, ,] data;
 
@@ -41,36 +43,26 @@ public class WorldGen : MonoBehaviour
             }
         }
 
-        chunks = new Chunk[Mathf.FloorToInt(worldX / chunkSize),
-                                 Mathf.FloorToInt(worldY / chunkSize),
-                                 Mathf.FloorToInt(worldZ / chunkSize)];
-
+        chunks = new Chunk[Mathf.FloorToInt(worldX / chunkSizeX),
+                                 Mathf.FloorToInt(worldZ / chunkSizeZ)];
 
     }
 
     public void GenColumn(int x, int z)
     {
-        for (int y = 0; y < chunks.GetLength(1); y++)
-        {
-            GameObject newChunk = Instantiate(chunk,
-             new Vector3(x * chunkSize - 0.5f, y * chunkSize + 0.5f, z * chunkSize - 0.5f),
-             new Quaternion(0, 0, 0, 0)) as GameObject;
+        GameObject newChunkGO = Instantiate(chunk,
+         new Vector3(x * chunkSizeX - 0.5f, 0 * chunkSizeY + 0.5f, z * chunkSizeZ - 0.5f),
+         new Quaternion(0, 0, 0, 0)) as GameObject;
 
-            chunks[x, y, z] = newChunk.GetComponent<Chunk>();
-            chunks[x, y, z].worldGO = gameObject;
-            chunks[x, y, z].chunkSize = chunkSize;
-            chunks[x, y, z].chunkX = x * chunkSize;
-            chunks[x, y, z].chunkY = y * chunkSize;
-            chunks[x, y, z].chunkZ = z * chunkSize;
-        }
+        var newChunk = newChunkGO.GetComponent<Chunk>();
+        newChunk.World = this;
+        chunks[x, z] = newChunk;
+        newChunk.CreateChunk(x * chunkSizeX, z * chunkSizeZ, chunkSizeX, chunkSizeY, chunkSizeZ);
     }
 
     public void UnloadColumn(int x, int z)
     {
-        for (int y = 0; y < chunks.GetLength(1); y++)
-        {
-            Object.Destroy(chunks[x, y, z].gameObject);
-        }
+        Object.Destroy(chunks[x, z].gameObject);
     }
 
     // Update is called once per frame
